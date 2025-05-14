@@ -1,0 +1,49 @@
+- name: Download Mattermost
+  get_url:
+    url: https://releases.mattermost.com/9.7.1/mattermost-9.7.1-linux-amd64.tar.gz
+    dest: /tmp/mattermost.tar.gz
+
+- name: Extract Mattermost
+  unarchive:
+    src: /tmp/mattermost.tar.gz
+    dest: /opt
+    remote_src: yes
+
+- name: Create Mattermost user and directories
+  user:
+    name: mattermost
+    system: yes
+
+- name: Set permissions
+  file:
+    path: /opt/mattermost
+    owner: mattermost
+    group: mattermost
+    recurse: yes
+
+- name: Create systemd service
+  copy:
+    dest: /etc/systemd/system/mattermost.service
+    content: |
+      [Unit]
+      Description=Mattermost
+      After=network.target
+      Requires=postgresql.service
+
+      [Service]
+      Type=simple
+      User=mattermost
+      Group=mattermost
+      WorkingDirectory=/opt/mattermost
+      ExecStart=/opt/mattermost/bin/mattermost
+      TimeoutStartSec=3600
+      Restart=always
+
+      [Install]
+      WantedBy=multi-user.target
+
+- name: Enable and start Mattermost
+  systemd:
+    name: mattermost
+    enabled: yes
+    state: started
