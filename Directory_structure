@@ -1,0 +1,9 @@
+mattermost-ansible-baremetal/
+├── inventory.ini
+├── playbook.yml
+├── roles/
+│   ├── dependencies/
+│   ├── mattermost/
+│   ├── postgresql/
+│   ├── coturn/
+│   ├── caddy/
