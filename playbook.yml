@@ -1,0 +1,10 @@
+- name: Install Mattermost stack on bare Debian server
+  hosts: app
+  become: yes
+
+  roles:
+    - dependencies
+    - postgresql
+    - mattermost
+    - coturn
+    - caddy
