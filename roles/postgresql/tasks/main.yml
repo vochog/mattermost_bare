@@ -1,0 +1,12 @@
+- name: Install PostgreSQL
+  apt:
+    name: postgresql
+    state: present
+
+- name: Create Mattermost DB and user
+  become_user: postgres
+  shell: |
+    psql -c "CREATE USER mmuser WITH PASSWORD 'mmuserpassword';"
+    psql -c "CREATE DATABASE mattermost OWNER mmuser;"
+  args:
+    creates: /var/lib/postgresql/data
